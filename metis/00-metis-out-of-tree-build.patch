@@ -1,0 +1,11 @@
+--- metis-5.0.2-orig/GKlib/GKlibSystem.cmake	2013-01-20 23:26:14.164303181 +0100
++++ metis-5.0.2/GKlib/GKlibSystem.cmake	2013-01-20 23:25:04.535346480 +0100
+@@ -109,7 +109,7 @@
+   if("${HAVE_THREADLOCALSTORAGE}" MATCHES "^${HAVE_THREADLOCALSTORAGE}$")
+     try_compile(HAVE_THREADLOCALSTORAGE
+       ${CMAKE_BINARY_DIR}
+-      ${GKLIB_PATH}/conf/check_thread_storage.c)
++      ${PROJECT_SOURCE_DIR}/${GKLIB_PATH}/conf/check_thread_storage.c)
+     if(HAVE_THREADLOCALSTORAGE)
+       message(STATUS "checking for thread-local storage - found")
+     else()

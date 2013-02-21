@@ -1,0 +1,10 @@
+--- metis-5.0.2/libmetis/CMakeLists.txt	2013-01-21 11:01:45.472033135 +0100
++++ metis-5.0.2-new/libmetis/CMakeLists.txt	2013-01-21 11:06:43.251137193 +0100
+@@ -7,6 +7,7 @@
+ if(UNIX)
+   target_link_libraries(metis m)
+ endif()
++SET_TARGET_PROPERTIES(metis PROPERTIES SOVERSION 1)
+ 
+ if(METIS_INSTALL)
+   install(TARGETS metis

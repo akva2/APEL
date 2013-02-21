@@ -1,0 +1,37 @@
+--- SuperLU_4.3/make.inc	2011-12-12 23:34:18.000000000 +0100
++++ SuperLU_4.3-new/make.inc	2013-01-21 16:48:59.191479216 +0100
+@@ -21,19 +21,19 @@
+ #
+ #  The name of the libraries to be created/linked to
+ #
+-SuperLUroot	= $(HOME)/Codes/SuperLU/SuperLU_4.3
++SuperLUroot	= $(BUILDROOT)
+ SUPERLULIB   	= $(SuperLUroot)/lib/libsuperlu_4.3.a
+ TMGLIB       	= libtmglib.a
+ 
+ ## BLASLIB   	= $(SuperLUroot)/lib/libblas.a
+ 
+-BLASDEF 	= -DUSE_VENDOR_BLAS
+-BLASLIB 	= -L$(HOME)/lib/GotoBLAS -lgoto
++#BLASDEF 	= -DUSE_VENDOR_BLAS
++#BLASLIB 	= -L$(HOME)/lib/GotoBLAS -lgoto
+ 
+ ## ATLAS BLAS causes single-precision to fail
+ #BLASLIB   	= -L/usr/lib/atlas -lblas
+ ## This BLAS causes single-precision to fail the test in SuperLU
+-#BLASLIB 	= -L/usr/lib -lblas
++BLASLIB 	= -L/usr/lib -lblas
+ 
+ LIBS		= $(SUPERLULIB) $(BLASLIB)
+ 
+@@ -46,8 +46,8 @@
+ RANLIB       = ranlib
+ 
+ CC           = gcc
+-CFLAGS       = -DPRNTlevel=0 -O3
+-NOOPTS       = 
++CFLAGS       = -DPRNTlevel=0 -O3 -fPIC
++NOOPTS       = -fPIC
+ FORTRAN	     = g77
+ FFLAGS       = -O2
+ LOADER       = $(CC)
