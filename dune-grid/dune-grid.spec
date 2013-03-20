@@ -76,7 +76,7 @@ This package contains the development and header files for %{name}.
 make %{?_smp_mflags}
 
 %install
-%makeinstall
+make install DESTDIR=${RPM_BUILD_ROOT}
 
 find %{buildroot} -name '*.la' -exec rm {} \;
 
