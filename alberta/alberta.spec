@@ -11,7 +11,7 @@ License:        GPL-3.0
 Group:          Development/Libraries/C and C++
 Url:            http://alberta-fem.de
 Source0:        %{name}-%{version}.tar.gz
-BuildRequires:  lapack-devel libX11-devel mesa-libGL-devel
+BuildRequires:  lapack-devel libX11-devel mesa-libGL-devel libtool pkgconfig
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Requires:	libalberta2 = %{version}
 
@@ -42,7 +42,7 @@ This package contains the development and header files for %{name}.
 make %{?_smp_mflags}
 
 %install
-%makeinstall
+make install DESTDIR=${RPM_BUILD_ROOT}
 
 %clean
 rm -rf %{buildroot}
