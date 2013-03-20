@@ -26,7 +26,8 @@ Summary:        SuperLU matrix solver
 Version:        4.3
 Release:        141
 Source:         superlu_%{version}.tar.gz
-Patch0:		00-superlu-make-inc-changes.patch
+Patch0:         SuperLU-add-fpic.patch
+Patch1:         SuperLU-build-shared-lib3.patch
 Url:            http://crd.lbl.gov/~xiaoye/SuperLU/
 Prefix:         /usr
 BuildRoot:      %{_tmppath}/SuperLU_4.3
@@ -70,24 +71,30 @@ This package contains the development and header files for %{name}.
 %prep
 %setup -n SuperLU_%{version}
 %patch0 -p1
+%patch1 -p1
+chmod a-x SRC/qselect.c 
+cp -p MAKE_INC/make.linux make.inc
+sed -i "s|-O3|$RPM_OPT_FLAGS|" make.inc
+sed -i "s|\$(SUPERLULIB) ||" make.inc
+sed -i "s|\$(HOME)/Codes/%{name}_%{version}|%{_builddir}/%{name}_%{version}|" make.inc
 
 %build
-#cd ../SuperLU
-make BUILDROOT=`pwd` #%{?jobs:-j%jobs}
-cd lib
-gcc -shared -o libsuperlu.so.3 -L. -Wl,--whole-archive -lsuperlu_4.3 -Wl,--no-whole-archive
-cd ..
+make superlulib
 
 %install
 install -d ${RPM_BUILD_ROOT}/%{_docdir}/superlu
-mkdir ${RPM_BUILD_ROOT}%{_libdir}
-cp -p lib/libsuperlu.so.3 ${RPM_BUILD_ROOT}%{_libdir}/libsuperlu.so.3
-pushd ${RPM_BUILD_ROOT}%{_libdir}
-ln -sf libsuperlu.so.3 libsuperlu.so
-popd
-install -d -m 0755 $RPM_BUILD_ROOT/usr/include/superlu
-install -m 0644 SRC/*.h $RPM_BUILD_ROOT/usr/include/superlu/
-cp -pf README $RPM_BUILD_ROOT/%{_docdir}/superlu/README.SuperLU
+mkdir -p %{buildroot}%{_libdir}
+mkdir -p %{buildroot}%{_includedir}/%{name}
+install -p SRC/libsuperlu.so.%{version} %{buildroot}%{_libdir}
+install -p SRC/*.h %{buildroot}%{_includedir}/%{name}
+chmod -x %{buildroot}%{_includedir}/%{name}/*.h
+cp -Pp SRC/libsuperlu.so %{buildroot}%{_libdir}
+
+%clean
+rm -rf %{buildroot}
+%post -n libsuperlu3 -p /sbin/ldconfig
+
+%postun -n libsuperlu3 -p /sbin/ldconfig
 
 %files
 %docdir %{_docdir}/superlu
