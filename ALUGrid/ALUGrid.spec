@@ -23,7 +23,7 @@ Summary:        ALUGrid Library provides both hexahedral and tetrahedral grids
 License:        GPL-2.0
 Group:          Development/Libraries/C and C++
 Url:            http://aam.mathematik.uni-freiburg.de/IAM/Research/alugrid/
-Source0:        %{name}-%{version}.tar.gz
+Source0:        http://aam.mathematik.uni-freiburg.de/IAM/Research/alugrid/%{name}-%{version}.tar.gz
 BuildRequires:  gcc-c++
 BuildRequires:  metis-devel
 BuildRequires:  pkgconfig

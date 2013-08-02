@@ -10,7 +10,7 @@ Summary:        ALBERTA - An adaptive hierarchical finite element toolbox
 License:        GPL-3.0
 Group:          Development/Libraries/C and C++
 Url:            http://alberta-fem.de
-Source0:        %{name}-%{version}.tar.gz
+Source0:        http://www.alberta-fem.de/Downloads/%{name}-%{version}.tar.gz
 BuildRequires:  lapack-devel libX11-devel mesa-libGL-devel libtool pkgconfig
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Requires:	libalberta2 = %{version}
