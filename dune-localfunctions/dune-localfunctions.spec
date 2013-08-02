@@ -23,7 +23,7 @@ Summary:        An interface and implementation for shape functions defined on t
 License:        GPL-2.0
 Group:          Development/Libraries/C and C++
 Url:            http://www.dune-project.org/
-Source0:        %{name}-%{version}.tar.gz
+Source0:        http://www.dune-project.org/download/%{version}/%{name}-%{version}.tar.gz
 BuildRequires:  ALUGrid-devel
 BuildRequires:  alberta-devel
 BuildRequires:  dune-common-devel

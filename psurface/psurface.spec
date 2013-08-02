@@ -23,7 +23,7 @@ Summary:        A C++ library that handles piecewise linear bijections between s
 License:        GPL-2.0
 Group:          Development/Libraries/C and C++
 Url:            http://numerik.mi.fu-berlin.de/dune/psurface/index.php
-Source0:        %{name}-%{version}.tar.gz
+Source0:        http://numerik.mi.fu-berlin.de/dune/psurface/lib%{name}-%{version}.tar.gz
 Patch0:		00-libpsurface-old-automake.patch
 BuildRequires:  gcc-c++ automake libtool doxygen
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
