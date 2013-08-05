@@ -57,9 +57,7 @@ This package contains the development and header files for %{name}.
 %setup -q
 
 %build
-%configure --enable-shared \
-           --without-ug \
-           --without-amiramesh
+%configure --enable-shared --without-ug --without-amiramesh
 make %{?_smp_mflags}
 
 %install

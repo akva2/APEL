@@ -1,0 +1,7 @@
+# editor backup files
+*~
+
+# editor temporary filess
+.\#*
+\#*\#
+.\#*\#

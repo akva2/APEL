@@ -1,0 +1,45 @@
+#!/bin/sh
+# -*- mode: sh -*-
+
+# add suffix $2 to every instance of $1 in $3
+add_suffix () {
+    # remove the suffix from those that have it, and
+    # then add it back to everyone, so we can run this
+    # action several times and get the same result
+    sed -i "s/$1$2/$1/g" "$3"
+    sed -i "s/$1/$1$2/g" "$3"
+}
+
+# add use of $1 at dir $2 in .spec $3. notice the use of commas to
+# avoid having to escape slashes in the path.
+add_conf_with () {
+    sed -i "s/[ ]*--with-$1[^ ]*//g" "$3"
+    sed -i "s,\(^%configure .*\),\1 --with-$1=$2," "$3"
+}
+
+# add definition $2 for variable $1 in configure command in spec $3
+add_conf_var () {
+    sed -i "s/[ ]*$1=[^ ]*//g" "$3"
+    sed -i "s,\(^%configure .*\),\1 $1=$2," "$3"
+}
+
+# in RHEL5, we must install a backported "multilib"
+# version of the necessary prerequisites. patch the
+# .spec files to use these instead
+for specfile in SPECS/*.spec; do
+    add_suffix "boost" "141" "$specfile"
+    add_suffix "gcc"   "44"  "$specfile"
+done
+
+# patch .spec files to use these extra packages
+for specfile in SPECS/*.spec; do
+    # use this version of Boost
+    if grep "boost" $specfile >/dev/null 2>&1; then
+        add_conf_with "boost"        "/usr/include/boost141" "$specfile"
+        add_conf_with "boost-libdir" "/usr/%{_lib}/boost141" "$specfile"
+    fi
+    
+    # use this version of gcc
+    add_conf_var "CC"  "gcc44" "$specfile"
+    add_conf_var "CXX" "g++44" "$specfile"
+done
