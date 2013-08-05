@@ -1,62 +1,9 @@
 #!/bin/sh
 # -*- mode: sh -*-
 
-# name of field is $1, the .spec file is $2
-read_field () {
-    sed -n "s/$1:[ ]\+\([a-zA-Z0-9_\-]*\)/\1/p" $2
-}
-
-# replace %{foo} references to ${foo}
-shell_syntax () {
-    sed "s/%{\([a-zA-Z0-9_\-]\+\)}/\${\1}/g"
-}
-
-# retrieve a list of patches from $1
-get_patches () {
-    sed -n 's/Patch[0-9]\+:[ ]*\(.*\)/\1/p' $1 | xargs
-}
-
-# get the spec-files from the same directory as this
-# script, and download to the current directory
-srctree=$(dirname $0)
-bldtree=$(pwd)
-
-# relative paths where we put tarballs and .spec
-mkdir -p $bldtree/SPECS
-mkdir -p $bldtree/SOURCES
-
-# enumerate .spec files
-for specfile in $(find $srctree -name '*.spec' | xargs); do
-    # get the Name, Version and Source0 fields
-    name=$(read_field Name $specfile)
-    version=$(read_field Version $specfile)
-    source=$(read_field Source0 $specfile)
-
-    # insert the other fields into the source field
-    source=$(eval echo "$(echo $source | shell_syntax)")
-
-    # if we use the #/ trick (see
-    # <http://fedoraproject.org/wiki/Packaging:SourceURL>),
-    # then split this into an URL and a local filename;
-    # otherwise use the name from the URL as is
-    url=$(echo $source | awk -F '#/' '{print $1}')
-    filename=$(echo $source | awk -F '#/' '{print $2}')
-    [ -z "$filename" ] && filename=$(basename $url)
-
-    # download this file; due to the --continue flag this
-    # is an indempotent action
-    wget --continue -O $bldtree/SOURCES/$filename $url
-
-    # make the .specfile available in the SPECS directory
-    cp $specfile $bldtree/SPECS
-
-    # make any .patch files for this package (at the same
-    # place as the .spec) available in the build-tree
-    patches=$(get_patches $specfile)
-    for patch in $patches; do
-        cp $(dirname $specfile)/$patch $bldtree/SOURCES
-    done
-done
+# make sure that we have everything we need in place;
+# this script will also set the variable bldtree
+source $(dirname $0)/download_prereqs
 
 # build each source package
 for specfile in $bldtree/SPECS/*.spec; do
