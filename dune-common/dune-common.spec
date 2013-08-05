@@ -22,7 +22,7 @@ Summary:        Distributed and Unified Numerics Environment
 License:        GPL-2.0
 Group:          Development/Libraries/C and C++
 Url:            http://www.dune-project.org/
-Source0:        %{name}-%{version}.tar.gz
+Source0:        http://www.dune-project.org/download/%{version}/%{name}-%{version}.tar.gz
 BuildRequires:  blas-devel
 BuildRequires:  gcc-c++
 BuildRequires:  gcc-gfortran

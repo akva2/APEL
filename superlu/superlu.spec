@@ -25,7 +25,7 @@ Group:          Development/Libraries/C and C++
 Summary:        SuperLU matrix solver
 Version:        4.3
 Release:        141
-Source:         superlu_%{version}.tar.gz
+Source0:        http://crd-legacy.lbl.gov/~xiaoye/SuperLU/%{name}_%{version}.tar.gz
 Patch0:         SuperLU-add-fpic.patch
 Patch1:         SuperLU-build-shared-lib3.patch
 Url:            http://crd.lbl.gov/~xiaoye/SuperLU/

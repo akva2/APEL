@@ -5,7 +5,7 @@ Release: 0
 License: BSD-like
 Group:   Productivity/Graphics/3D Editors  
 URL: http://glaros.dtc.umn.edu/gkhome/metis/metis/overview
-Source0: %{name}-%{version}.tar.gz
+Source0: http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/%{name}-%{version}.tar.gz
 Patch0: 00-metis-out-of-tree-build.patch
 Patch1: 01-metis-set-soversion.patch
 Patch2: 02-metis-honor-lib64.patch
