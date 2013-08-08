@@ -17,7 +17,7 @@
 
 
 Name:           dune-localfunctions
-Version:        2.2.0
+Version:        2.2.1
 Release:        0
 Summary:        An interface and implementation for shape functions defined on the DUNE
 License:        GPL-2.0

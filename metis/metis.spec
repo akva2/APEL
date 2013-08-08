@@ -29,7 +29,6 @@ Requires:        %name = %version
 Requires:	 pkgconfig
 Summary:         Metis development files
 Group:           Development/Libraries/C and C++
-BuildArch:	 noarch
 
 %description -n libmetis0
 METIS is a family of programs for partitioning unstructured graphs and hypergraph

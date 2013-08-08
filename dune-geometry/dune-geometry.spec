@@ -3,7 +3,7 @@
 #
 
 Name:           dune-geometry
-Version:        2.2.0
+Version:        2.2.1
 Release:        0
 Summary:        Everything related to the DUNE reference elements
 License:        GPL-2.0
@@ -39,7 +39,6 @@ Group:          Development/Libraries/C and C++
 Requires:       dune-common-devel = %{version}
 Requires:       gmp-devel
 Requires:       libdune-geometry0 = %{version}
-BuildArch:	noarch
 
 %description devel
 This package contains the development and header files for DUNE.

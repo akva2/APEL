@@ -16,7 +16,7 @@
 #
 
 Name:           dune-common
-Version:        2.2.0
+Version:        2.2.1
 Release:        0
 Summary:        Distributed and Unified Numerics Environment
 License:        GPL-2.0
@@ -54,7 +54,6 @@ Requires:       %{name} = %{version}
 Requires:       blas-devel
 Requires:       lapack-devel
 Requires:       libdune-common0 = %{version}
-BuildArch:	noarch
 
 %description devel
 This package contains the development and header files for DUNE.

@@ -47,7 +47,6 @@ not even be manifolds.
 Summary:        Development and header files for %{name}
 Group:          Development/Libraries/C and C++
 Requires:       libpsurface0 = %{version}
-BuildArch:	noarch
 
 %description devel
 This package contains the development and header files for %{name}.

@@ -19,7 +19,7 @@
 
 
 Name:           superlu
-BuildRequires:  gcc-gfortran tcsh
+BuildRequires:  gcc-gfortran tcsh blas-devel
 License:        BSD 3-Clause
 Group:          Development/Libraries/C and C++
 Summary:        SuperLU matrix solver
@@ -31,7 +31,7 @@ Patch1:         SuperLU-build-shared-lib3.patch
 Url:            http://crd.lbl.gov/~xiaoye/SuperLU/
 Prefix:         /usr
 BuildRoot:      %{_tmppath}/SuperLU_4.3
-Requires:	libsuperlu3 = %{version}
+Requires:       libsuperlu3 = %{version}
 
 %description
 SuperLU is an algorithm that uses group theory to optimize LU
@@ -63,7 +63,6 @@ Authors:
 Summary:        Development and header files for %{name}
 Group:          Development/Libraries/C and C++
 Requires:       libsuperlu3 = %{version}
-BuildArch:	noarch
 
 %description devel
 This package contains the development and header files for %{name}.

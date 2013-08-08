@@ -17,7 +17,7 @@
 
 
 Name:           dune-istl
-Version:        2.2.0
+Version:        2.2.1
 Release:        0
 Summary:        An iterative solver template library for DUNE
 License:        GPL-2.0
@@ -36,7 +36,6 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Requires:       dune-common = %{version}
 # Since it is a pure template library..
 Requires:	dune-istl-devel = %{version}
-BuildArch:	noarch
 
 %description
 dune-istl is the iterative solver template library which provides generic
@@ -54,7 +53,6 @@ Requires:       dune-common-devel = %{version}
 Requires:       gmp-devel
 Requires:       metis-devel
 Requires:       superlu-devel
-BuildArch:	noarch
 
 %description devel
 This package contains the development and header files for DUNE.

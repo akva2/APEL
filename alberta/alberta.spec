@@ -29,7 +29,6 @@ refinement and Error control by Residual Techniques for scientific Applications.
 Summary:        Development and header files for %{name}
 Group:          Development/Libraries/C and C++
 Requires:       libalberta2 = %{version}
-BuildArch:	noarch
 
 %description devel
 This package contains the development and header files for %{name}.

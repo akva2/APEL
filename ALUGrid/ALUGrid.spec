@@ -49,7 +49,6 @@ of the domain can be recomputed.
 Summary:        Development and header files for %{name}
 Group:          Development/Libraries/C and C++
 Requires:       libalugrid0 = %{version}
-BuildArch:	noarch
 
 %description devel
 This package contains the development and header files for %{name}.
