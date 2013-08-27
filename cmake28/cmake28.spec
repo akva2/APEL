@@ -43,7 +43,11 @@ BuildRequires:  zlib-devel
 #BuildRequires: xmlrpc-c-devel
 %endif
 %if %{with gui}
+%if 0%{?rhel} > 5
 BuildRequires: qt4-devel, desktop-file-utils
+%else
+BuildRequires: qt46-devel, desktop-file-utils
+%endif
 %define qt_gui --qt-gui
 %endif
 Requires:       rpm
@@ -75,6 +79,9 @@ The %{name}-gui package contains the Qt based GUI for CMake.
 
 
 %build
+%if 0%{?rhel} < 6
+export PATH=%{_libdir}/qt46/bin:$PATH
+%endif
 export CFLAGS="$RPM_OPT_FLAGS"
 export CXXFLAGS="$RPM_OPT_FLAGS"
 mkdir build
