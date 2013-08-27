@@ -2,7 +2,7 @@
 # or architecture
 %bcond_with bootstrap
 # Set to bcond_with or use --without gui to disable qt4 gui build
-%bcond_without gui
+%bcond_with gui
 
 Name:           cmake28
 Version:        2.8.8
