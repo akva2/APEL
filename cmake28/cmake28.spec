@@ -32,7 +32,11 @@ Provides: bundled(md5-deutsch)
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:  gcc-gfortran
+%if 0%{?rhel} > 5
+BuildRequires: gcc-gfortran
+%else
+BuildRequires: gcc44-gfortran
+%endif
 BuildRequires:  ncurses-devel, libX11-devel
 BuildRequires:  bzip2-devel
 BuildRequires:  curl-devel
@@ -81,6 +85,8 @@ The %{name}-gui package contains the Qt based GUI for CMake.
 %build
 %if 0%{?rhel} < 6
 export PATH=%{_libdir}/qt46/bin:$PATH
+export CC=gcc44
+export CXX=g++44
 %endif
 export CFLAGS="$RPM_OPT_FLAGS"
 export CXXFLAGS="$RPM_OPT_FLAGS"
