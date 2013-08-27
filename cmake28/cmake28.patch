@@ -1,0 +1,442 @@
+diff -up cmake-2.8.8/bootstrap.cmake28 cmake-2.8.8/bootstrap
+--- cmake-2.8.8/bootstrap.cmake28	2012-04-18 19:10:54.000000000 +0100
++++ cmake-2.8.8/bootstrap	2012-05-07 16:20:37.396532986 +0100
+@@ -1410,8 +1410,8 @@ cmake_c_flags="${cmake_c_flags}-I`cmake_
+   -I`cmake_escape \"${cmake_bootstrap_dir}\"`"
+ cmake_cxx_flags="${cmake_cxx_flags} -I`cmake_escape \"${cmake_bootstrap_dir}\"` -I`cmake_escape \"${cmake_source_dir}/Source\"` \
+   -I`cmake_escape \"${cmake_bootstrap_dir}\"`"
+-echo "cmake: ${objs}" > "${cmake_bootstrap_dir}/Makefile"
+-echo "	${cmake_cxx_compiler} ${cmake_ld_flags} ${cmake_cxx_flags} ${objs} -o cmake" >> "${cmake_bootstrap_dir}/Makefile"
++echo "cmake28: ${objs}" > "${cmake_bootstrap_dir}/Makefile"
++echo "	${cmake_cxx_compiler} ${cmake_ld_flags} ${cmake_cxx_flags} ${objs} -o cmake28" >> "${cmake_bootstrap_dir}/Makefile"
+ for a in ${CMAKE_CXX_SOURCES}; do
+   src=`cmake_escape "${cmake_source_dir}/Source/${a}.cxx"`
+   echo "${a}.o : ${src} ${dep}" >> "${cmake_bootstrap_dir}/Makefile"
+@@ -1516,7 +1516,7 @@ cmake_options="-DCMAKE_BOOTSTRAP=1"
+ if [ -n "${cmake_verbose}" ]; then
+   cmake_options="${cmake_options} -DCMAKE_VERBOSE_MAKEFILE=1"
+ fi
+-"${cmake_bootstrap_dir}/cmake" "${cmake_source_dir}" "-C${cmake_bootstrap_dir}/InitialCacheFlags.cmake" "-G${cmake_bootstrap_generator}" ${cmake_options} ${cmake_bootstrap_system_libs} "$@"
++"${cmake_bootstrap_dir}/cmake28" "${cmake_source_dir}" "-C${cmake_bootstrap_dir}/InitialCacheFlags.cmake" "-G${cmake_bootstrap_generator}" ${cmake_options} ${cmake_bootstrap_system_libs} "$@"
+ RES=$?
+ if [ "${RES}" -ne "0" ]; then
+   cmake_error 11 "Problem while running initial CMake"
+diff -up cmake-2.8.8/CMakeLists.txt.cmake28 cmake-2.8.8/CMakeLists.txt
+--- cmake-2.8.8/CMakeLists.txt.cmake28	2012-05-07 00:44:38.666506268 +0100
++++ cmake-2.8.8/CMakeLists.txt	2012-05-07 00:49:50.761596500 +0100
+@@ -151,9 +151,9 @@ MACRO(CMAKE_SETUP_TESTING)
+     # the ctest from this cmake is used for testing
+     # and not the ctest from the cmake building and testing
+     # cmake.
+-    SET(CMAKE_CTEST_COMMAND "${CMake_BIN_DIR}/ctest")
+-    SET(CMAKE_CMAKE_COMMAND "${CMake_BIN_DIR}/cmake")
+-    SET(CMAKE_CPACK_COMMAND "${CMake_BIN_DIR}/cpack")
++    SET(CMAKE_CTEST_COMMAND "${CMake_BIN_DIR}/ctest28")
++    SET(CMAKE_CMAKE_COMMAND "${CMake_BIN_DIR}/cmake28")
++    SET(CMAKE_CPACK_COMMAND "${CMake_BIN_DIR}/cpack28")
+   ENDIF(BUILD_TESTING)
+ 
+   # configure some files for testing
+diff -up cmake-2.8.8/Source/cmake.cxx.cmake28 cmake-2.8.8/Source/cmake.cxx
+--- cmake-2.8.8/Source/cmake.cxx.cmake28	2012-05-07 14:56:43.841600253 +0100
++++ cmake-2.8.8/Source/cmake.cxx	2012-05-08 00:56:21.035564334 +0100
+@@ -950,7 +950,7 @@ int cmake::AddCMakePaths()
+   // Find the cmake executable
+   std::string cMakeSelf = cmSystemTools::GetExecutableDirectory();
+   cMakeSelf = cmSystemTools::GetRealPath(cMakeSelf.c_str());
+-  cMakeSelf += "/cmake";
++  cMakeSelf += "/cmake28";
+   cMakeSelf += cmSystemTools::GetExecutableExtension();
+ #if __APPLE__
+   // on the apple this might be the gui bundle
+@@ -995,12 +995,12 @@ int cmake::AddCMakePaths()
+     if( !cmSystemTools::FileExists(editCacheCommand.c_str()))
+       {
+       editCacheCommand = cmSystemTools::GetFilenamePath(cMakeSelf) +
+-        "/ccmake" + cmSystemTools::GetFilenameExtension(cMakeSelf);
++        "/ccmake28" + cmSystemTools::GetFilenameExtension(cMakeSelf);
+       }
+     if( !cmSystemTools::FileExists(editCacheCommand.c_str()))
+       {
+       editCacheCommand = cmSystemTools::GetFilenamePath(cMakeSelf) +
+-        "/cmake-gui" + cmSystemTools::GetFilenameExtension(cMakeSelf);
++        "/cmake28-gui" + cmSystemTools::GetFilenameExtension(cMakeSelf);
+       }
+     if(cmSystemTools::FileExists(editCacheCommand.c_str()))
+       {
+@@ -1010,7 +1010,7 @@ int cmake::AddCMakePaths()
+       }
+     }
+   std::string ctestCommand = cmSystemTools::GetFilenamePath(cMakeSelf) +
+-    "/ctest" + cmSystemTools::GetFilenameExtension(cMakeSelf);
++    "/ctest28" + cmSystemTools::GetFilenameExtension(cMakeSelf);
+   if(cmSystemTools::FileExists(ctestCommand.c_str()))
+     {
+     this->CacheManager->AddCacheEntry
+@@ -1018,7 +1018,7 @@ int cmake::AddCMakePaths()
+        "Path to ctest program executable.", cmCacheManager::INTERNAL);
+     }
+   std::string cpackCommand = cmSystemTools::GetFilenamePath(cMakeSelf) +
+-    "/cpack" + cmSystemTools::GetFilenameExtension(cMakeSelf);
++    "/cpack28" + cmSystemTools::GetFilenameExtension(cMakeSelf);
+   if(cmSystemTools::FileExists(cpackCommand.c_str()))
+     {
+     this->CacheManager->AddCacheEntry
+@@ -3024,7 +3024,7 @@ const char* cmake::GetCTestCommand()
+ {
+   if ( this->CTestCommand.empty() )
+     {
+-    this->CTestCommand = this->FindCMakeProgram("ctest");
++    this->CTestCommand = this->FindCMakeProgram("ctest28");
+     }
+   if ( this->CTestCommand.empty() )
+     {
+@@ -3038,7 +3038,7 @@ const char* cmake::GetCPackCommand()
+ {
+   if ( this->CPackCommand.empty() )
+     {
+-    this->CPackCommand = this->FindCMakeProgram("cpack");
++    this->CPackCommand = this->FindCMakeProgram("cpack28");
+     }
+   if ( this->CPackCommand.empty() )
+     {
+diff -up cmake-2.8.8/Source/CMakeLists.txt.cmake28 cmake-2.8.8/Source/CMakeLists.txt
+--- cmake-2.8.8/Source/CMakeLists.txt.cmake28	2012-05-07 00:39:23.197506219 +0100
++++ cmake-2.8.8/Source/CMakeLists.txt	2012-05-07 12:57:49.292534833 +0100
+@@ -522,8 +522,8 @@ IF(APPLE)
+ ENDIF(APPLE)
+ 
+ # Build CMake executable
+-ADD_EXECUTABLE(cmake cmakemain.cxx)
+-TARGET_LINK_LIBRARIES(cmake CMakeLib)
++ADD_EXECUTABLE(cmake28 cmakemain.cxx)
++TARGET_LINK_LIBRARIES(cmake28 CMakeLib)
+ 
+ # Build special executable for running programs on Windows 98
+ IF(WIN32)
+@@ -535,12 +535,12 @@ IF(WIN32)
+ ENDIF(WIN32)
+ 
+ # Build CTest executable
+-ADD_EXECUTABLE(ctest ctest.cxx)
+-TARGET_LINK_LIBRARIES(ctest CTestLib)
++ADD_EXECUTABLE(ctest28 ctest.cxx)
++TARGET_LINK_LIBRARIES(ctest28 CTestLib)
+ 
+ # Build CPack executable
+-ADD_EXECUTABLE(cpack CPack/cpack.cxx)
+-TARGET_LINK_LIBRARIES(cpack CPackLib)
++ADD_EXECUTABLE(cpack28 CPack/cpack.cxx)
++TARGET_LINK_LIBRARIES(cpack28 CPackLib)
+ 
+ # Curses GUI
+ IF(BUILD_CursesDialog)
+@@ -556,9 +556,9 @@ ENDIF(BUILD_QtDialog)
+ INCLUDE (${CMake_BINARY_DIR}/Source/LocalUserOptions.cmake OPTIONAL)
+ INCLUDE (${CMake_SOURCE_DIR}/Source/LocalUserOptions.cmake OPTIONAL)
+ 
+-INSTALL_TARGETS(/bin cmake)
+-INSTALL_TARGETS(/bin ctest)
+-INSTALL_TARGETS(/bin cpack)
++INSTALL_TARGETS(/bin cmake28)
++INSTALL_TARGETS(/bin ctest28)
++INSTALL_TARGETS(/bin cpack28)
+ IF(APPLE)
+   INSTALL_TARGETS(/bin cmakexbuild)
+ ENDIF(APPLE)
+diff -up cmake-2.8.8/Source/cmCTest.cxx.cmake28 cmake-2.8.8/Source/cmCTest.cxx
+--- cmake-2.8.8/Source/cmCTest.cxx.cmake28	2012-05-07 20:23:17.449503203 +0100
++++ cmake-2.8.8/Source/cmCTest.cxx	2012-05-07 20:23:51.737506353 +0100
+@@ -2465,7 +2465,7 @@ void cmCTest::FindRunningCMake()
+ {
+   // Find our own executable.
+   this->CTestSelf = cmSystemTools::GetExecutableDirectory();
+-  this->CTestSelf += "/ctest";
++  this->CTestSelf += "/ctest28";
+   this->CTestSelf += cmSystemTools::GetExecutableExtension();
+   if(!cmSystemTools::FileExists(this->CTestSelf.c_str()))
+     {
+@@ -2474,7 +2474,7 @@ void cmCTest::FindRunningCMake()
+     }
+ 
+   this->CMakeSelf = cmSystemTools::GetExecutableDirectory();
+-  this->CMakeSelf += "/cmake";
++  this->CMakeSelf += "/cmake28";
+   this->CMakeSelf += cmSystemTools::GetExecutableExtension();
+   if(!cmSystemTools::FileExists(this->CMakeSelf.c_str()))
+     {
+diff -up cmake-2.8.8/Source/cmGlobalGenerator.cxx.cmake28 cmake-2.8.8/Source/cmGlobalGenerator.cxx
+--- cmake-2.8.8/Source/cmGlobalGenerator.cxx.cmake28	2012-05-07 19:14:47.742503547 +0100
++++ cmake-2.8.8/Source/cmGlobalGenerator.cxx	2012-05-07 19:15:25.869555965 +0100
+@@ -1970,7 +1970,7 @@ void cmGlobalGenerator::CreateDefaultGlo
+       // We are building CMake itself.  We cannot use the original
+       // executable to install over itself.  The generator will
+       // automatically convert this name to the build-time location.
+-      cmd = "cmake";
++      cmd = "cmake28";
+       }
+     singleLine.push_back(cmd.c_str());
+     if ( cmakeCfgIntDir && *cmakeCfgIntDir && cmakeCfgIntDir[0] != '.' )
+diff -up cmake-2.8.8/Source/CursesDialog/CMakeLists.txt.cmake28 cmake-2.8.8/Source/CursesDialog/CMakeLists.txt
+--- cmake-2.8.8/Source/CursesDialog/CMakeLists.txt.cmake28	2012-05-07 00:41:32.468540511 +0100
++++ cmake-2.8.8/Source/CursesDialog/CMakeLists.txt	2012-05-07 13:09:06.055533890 +0100
+@@ -30,8 +30,8 @@ INCLUDE_DIRECTORIES(${CMake_SOURCE_DIR}/
+ INCLUDE_DIRECTORIES(${CURSES_INCLUDE_PATH})
+ 
+ 
+-ADD_EXECUTABLE(ccmake ${CURSES_SRCS} )
+-TARGET_LINK_LIBRARIES(ccmake CMakeLib)
+-TARGET_LINK_LIBRARIES(ccmake cmForm)
++ADD_EXECUTABLE(ccmake28 ${CURSES_SRCS} )
++TARGET_LINK_LIBRARIES(ccmake28 CMakeLib)
++TARGET_LINK_LIBRARIES(ccmake28 cmForm)
+ 
+-INSTALL_TARGETS(/bin ccmake)
++INSTALL_TARGETS(/bin ccmake28)
+diff -up cmake-2.8.8/Source/QtDialog/CMake.desktop.cmake28 cmake-2.8.8/Source/QtDialog/CMake.desktop
+--- cmake-2.8.8/Source/QtDialog/CMake.desktop.cmake28	2012-05-07 21:33:56.021506359 +0100
++++ cmake-2.8.8/Source/QtDialog/CMake.desktop	2012-05-07 21:34:11.907565365 +0100
+@@ -1,9 +1,9 @@
+ [Desktop Entry]
+ Version=1.0
+-Name=CMake
++Name=CMake28
+ Comment=Cross-platform buildsystem
+-Exec=cmake-gui %f
+-Icon=CMakeSetup32.png
++Exec=cmake28-gui %f
++Icon=CMake28Setup32.png
+ Terminal=false
+ X-MultipleArgs=false
+ Type=Application
+diff -up cmake-2.8.8/Source/QtDialog/CMakeLists.txt.cmake28 cmake-2.8.8/Source/QtDialog/CMakeLists.txt
+--- cmake-2.8.8/Source/QtDialog/CMakeLists.txt.cmake28	2012-05-07 20:04:45.957502375 +0100
++++ cmake-2.8.8/Source/QtDialog/CMakeLists.txt	2012-05-07 20:05:04.508565061 +0100
+@@ -69,8 +69,8 @@ ELSE(NOT QT4_FOUND)
+   INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
+   INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
+ 
+-  ADD_EXECUTABLE(cmake-gui WIN32 MACOSX_BUNDLE ${SRCS})
+-  TARGET_LINK_LIBRARIES(cmake-gui CMakeLib ${QT_QTMAIN_LIBRARY} ${QT_LIBRARIES})
++  ADD_EXECUTABLE(cmake28-gui WIN32 MACOSX_BUNDLE ${SRCS})
++  TARGET_LINK_LIBRARIES(cmake28-gui CMakeLib ${QT_QTMAIN_LIBRARY} ${QT_LIBRARIES})
+   IF(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} GREATER 2.4)
+     IF(APPLE)
+       SET_TARGET_PROPERTIES(cmake-gui PROPERTIES
+@@ -80,14 +80,14 @@ ELSE(NOT QT4_FOUND)
+       BUNDLE DESTINATION "${CMAKE_BUNDLE_LOCATION}")
+   ENDIF(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} GREATER 2.4)
+ 
+-  INSTALL(TARGETS cmake-gui RUNTIME DESTINATION bin ${CMAKE_INSTALL_DESTINATION_ARGS})
++  INSTALL(TARGETS cmake28-gui RUNTIME DESTINATION bin ${CMAKE_INSTALL_DESTINATION_ARGS})
+ 
+   IF(UNIX)
+     # install a desktop file so CMake appears in the application start menu
+     # with an icon
+-    INSTALL(FILES CMake.desktop DESTINATION share/applications )
+-    INSTALL(FILES CMakeSetup32.png DESTINATION share/pixmaps )
+-    INSTALL(FILES cmakecache.xml DESTINATION share/mime/packages )
++    INSTALL(FILES CMake.desktop DESTINATION share/applications RENAME CMake28.desktop)
++    INSTALL(FILES CMakeSetup32.png DESTINATION share/pixmaps RENAME CMake28Setup32.png)
++    INSTALL(FILES cmakecache.xml DESTINATION share/mime/packages RENAME cmake28cache.xml)
+   ENDIF(UNIX)
+ 
+   IF(APPLE)
+diff -up cmake-2.8.8/Tests/CMakeLists.txt.cmake28 cmake-2.8.8/Tests/CMakeLists.txt
+--- cmake-2.8.8/Tests/CMakeLists.txt.cmake28	2012-05-07 20:49:04.502506270 +0100
++++ cmake-2.8.8/Tests/CMakeLists.txt	2012-05-07 20:48:32.143564937 +0100
+@@ -2087,7 +2087,7 @@ ${CMake_BINARY_DIR}/bin/cmake -DVERSION=
+       --build-makeprogram ${bootstrap}
+       --build-generator "${CMAKE_TEST_GENERATOR}"
+       --test-command
+-      ${CMake_BINARY_DIR}/Tests/BootstrapTest/Bootstrap.cmk/cmake)
++      ${CMake_BINARY_DIR}/Tests/BootstrapTest/Bootstrap.cmk/cmake28)
+     LIST(APPEND TEST_BUILD_DIRS "${CMake_BINARY_DIR}/Tests/BootstrapTest")
+     # Make this test run early during parallel execution
+     SET_TESTS_PROPERTIES(BootstrapTest PROPERTIES COST 5000)
+diff -up cmake-2.8.8/Tests/CMakeTests/CMakeLists.txt.cmake28 cmake-2.8.8/Tests/CMakeTests/CMakeLists.txt
+--- cmake-2.8.8/Tests/CMakeTests/CMakeLists.txt.cmake28	2012-05-07 23:44:48.583506579 +0100
++++ cmake-2.8.8/Tests/CMakeTests/CMakeLists.txt	2012-05-07 23:44:58.533534145 +0100
+@@ -1,4 +1,4 @@
+-SET(CMAKE_EXECUTABLE "${CMake_BIN_DIR}/cmake")
++SET(CMAKE_EXECUTABLE "${CMake_BIN_DIR}/cmake28")
+ 
+ 
+ MACRO(AddCMakeTest TestName PreArgs)
+diff -up cmake-2.8.8/Tests/CPackComponentsForAll/RunCPackVerifyResult.cmake.cmake28 cmake-2.8.8/Tests/CPackComponentsForAll/RunCPackVerifyResult.cmake
+--- cmake-2.8.8/Tests/CPackComponentsForAll/RunCPackVerifyResult.cmake.cmake28	2012-05-08 01:07:50.530533802 +0100
++++ cmake-2.8.8/Tests/CPackComponentsForAll/RunCPackVerifyResult.cmake	2012-05-08 01:08:35.698502662 +0100
+@@ -10,7 +10,7 @@ if(NOT CPackGen)
+   message(FATAL_ERROR "CPackGen not set")
+ endif(NOT CPackGen)
+ get_filename_component(CPACK_LOCATION ${CMAKE_COMMAND} PATH)
+-set(CPackCommand "${CPACK_LOCATION}/cpack")
++set(CPackCommand "${CPACK_LOCATION}/cpack28")
+ message("cpack = ${CPackCommand}")
+ if(NOT CPackCommand)
+   message(FATAL_ERROR "CPackCommand not set")
+diff -up cmake-2.8.8/Tests/CTestConfig/dashboard.cmake.in.cmake28 cmake-2.8.8/Tests/CTestConfig/dashboard.cmake.in
+--- cmake-2.8.8/Tests/CTestConfig/dashboard.cmake.in.cmake28	2012-05-08 00:24:26.603506491 +0100
++++ cmake-2.8.8/Tests/CTestConfig/dashboard.cmake.in	2012-05-08 00:24:54.081565599 +0100
+@@ -5,7 +5,7 @@ set(CTEST_BINARY_DIRECTORY "@CMake_BINAR
+ file(MAKE_DIRECTORY "${CTEST_BINARY_DIRECTORY}")
+ 
+ get_filename_component(dir "${CMAKE_COMMAND}" PATH)
+-set(CMAKE_CTEST_COMMAND "${dir}/ctest")
++set(CMAKE_CTEST_COMMAND "${dir}/ctest28")
+ 
+ message("CMAKE_COMMAND='${CMAKE_COMMAND}'")
+ message("CMAKE_CTEST_COMMAND='${CMAKE_CTEST_COMMAND}'")
+diff -up cmake-2.8.8/Tests/FindPackageModeMakefileTest/CMakeLists.txt.cmake28 cmake-2.8.8/Tests/FindPackageModeMakefileTest/CMakeLists.txt
+--- cmake-2.8.8/Tests/FindPackageModeMakefileTest/CMakeLists.txt.cmake28	2012-05-08 00:28:03.942506390 +0100
++++ cmake-2.8.8/Tests/FindPackageModeMakefileTest/CMakeLists.txt	2012-05-08 00:28:16.846503117 +0100
+@@ -19,7 +19,7 @@ if(UNIX  AND  "${CMAKE_GENERATOR}" MATCH
+     configure_file(FindFoo.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/FindFoo.cmake @ONLY)
+ 
+     # now set up the test:
+-    get_target_property(cmakeExecutable cmake LOCATION)
++    get_target_property(cmakeExecutable cmake28 LOCATION)
+ 
+     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Makefile.in ${CMAKE_CURRENT_BINARY_DIR}/ConfMakefile @ONLY)
+     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/main.cpp ${CMAKE_CURRENT_BINARY_DIR}/main.cpp COPYONLY)
+diff -up cmake-2.8.8/Utilities/CMakeLists.txt.cmake28 cmake-2.8.8/Utilities/CMakeLists.txt
+--- cmake-2.8.8/Utilities/CMakeLists.txt.cmake28	2012-05-07 12:27:20.431502388 +0100
++++ cmake-2.8.8/Utilities/CMakeLists.txt	2012-05-07 16:48:22.128565026 +0100
+@@ -17,32 +17,32 @@ MAKE_DIRECTORY(${CMake_BINARY_DIR}/Docs)
+ SET(DOC_FILES "")
+ 
+ SET(MAN_FILES
+-  ${CMake_BINARY_DIR}/Docs/cmake.1
+-  ${CMake_BINARY_DIR}/Docs/cmakecommands.1
+-  ${CMake_BINARY_DIR}/Docs/cmakecompat.1
+-  ${CMake_BINARY_DIR}/Docs/cmakeprops.1
+-  ${CMake_BINARY_DIR}/Docs/cmakepolicies.1
+-  ${CMake_BINARY_DIR}/Docs/cmakevars.1
+-  ${CMake_BINARY_DIR}/Docs/cmakemodules.1
++  ${CMake_BINARY_DIR}/Docs/cmake28.1
++  ${CMake_BINARY_DIR}/Docs/cmake28commands.1
++  ${CMake_BINARY_DIR}/Docs/cmake28compat.1
++  ${CMake_BINARY_DIR}/Docs/cmake28props.1
++  ${CMake_BINARY_DIR}/Docs/cmake28policies.1
++  ${CMake_BINARY_DIR}/Docs/cmake28vars.1
++  ${CMake_BINARY_DIR}/Docs/cmake28modules.1
+   )
+ SET(TEXT_FILES
+-  ${CMake_BINARY_DIR}/Docs/cmake.txt
+-  ${CMake_BINARY_DIR}/Docs/cmake.docbook
+-  ${CMake_BINARY_DIR}/Docs/cmake-policies.txt
+-  ${CMake_BINARY_DIR}/Docs/cmake-properties.txt
+-  ${CMake_BINARY_DIR}/Docs/cmake-variables.txt
+-  ${CMake_BINARY_DIR}/Docs/cmake-modules.txt
+-  ${CMake_BINARY_DIR}/Docs/cmake-commands.txt
+-  ${CMake_BINARY_DIR}/Docs/cmake-compatcommands.txt
++  ${CMake_BINARY_DIR}/Docs/cmake28.txt
++  ${CMake_BINARY_DIR}/Docs/cmake28.docbook
++  ${CMake_BINARY_DIR}/Docs/cmake28-policies.txt
++  ${CMake_BINARY_DIR}/Docs/cmake28-properties.txt
++  ${CMake_BINARY_DIR}/Docs/cmake28-variables.txt
++  ${CMake_BINARY_DIR}/Docs/cmake28-modules.txt
++  ${CMake_BINARY_DIR}/Docs/cmake28-commands.txt
++  ${CMake_BINARY_DIR}/Docs/cmake28-compatcommands.txt
+   )
+ SET(HTML_FILES
+-  ${CMake_BINARY_DIR}/Docs/cmake.html
+-  ${CMake_BINARY_DIR}/Docs/cmake-policies.html
+-  ${CMake_BINARY_DIR}/Docs/cmake-properties.html
+-  ${CMake_BINARY_DIR}/Docs/cmake-variables.html
+-  ${CMake_BINARY_DIR}/Docs/cmake-modules.html
+-  ${CMake_BINARY_DIR}/Docs/cmake-commands.html
+-  ${CMake_BINARY_DIR}/Docs/cmake-compatcommands.html
++  ${CMake_BINARY_DIR}/Docs/cmake28.html
++  ${CMake_BINARY_DIR}/Docs/cmake28-policies.html
++  ${CMake_BINARY_DIR}/Docs/cmake28-properties.html
++  ${CMake_BINARY_DIR}/Docs/cmake28-variables.html
++  ${CMake_BINARY_DIR}/Docs/cmake28-modules.html
++  ${CMake_BINARY_DIR}/Docs/cmake28-commands.html
++  ${CMake_BINARY_DIR}/Docs/cmake28-compatcommands.html
+   )
+ 
+ MACRO(ADD_DOCS target dependency)
+@@ -85,51 +85,51 @@ ENDIF(BUILD_QtDialog AND "${CMAKE_GENERA
+   AND EXISTS "${QT_QMAKE_EXECUTABLE}" AND NOT CMAKE_NO_AUTO_QT_ENV)
+ 
+ # add the docs for the executables
+-ADD_DOCS(ctest      ${CMake_SOURCE_DIR}/Utilities/Doxygen/authors.txt)
+-ADD_DOCS(cpack      ${CMake_SOURCE_DIR}/Utilities/Doxygen/authors.txt)
+-ADD_DOCS(ccmake     ${CMake_SOURCE_DIR}/Utilities/Doxygen/authors.txt)
++ADD_DOCS(ctest28      ${CMake_SOURCE_DIR}/Utilities/Doxygen/authors.txt)
++ADD_DOCS(cpack28      ${CMake_SOURCE_DIR}/Utilities/Doxygen/authors.txt)
++ADD_DOCS(ccmake28     ${CMake_SOURCE_DIR}/Utilities/Doxygen/authors.txt)
+ ADD_DOCS(CMakeSetup ${CMake_SOURCE_DIR}/Utilities/Doxygen/doxyfile.in)
+-ADD_DOCS(cmake-gui ${CMake_SOURCE_DIR}/Utilities/Doxygen/doxyfile.in)
++ADD_DOCS(cmake28-gui ${CMake_SOURCE_DIR}/Utilities/Doxygen/doxyfile.in)
+ 
+ # add the documentation for cmake itself
+ 
+-GET_TARGET_PROPERTY(CMD cmake LOCATION)
++GET_TARGET_PROPERTY(CMD cmake28 LOCATION)
+ ADD_CUSTOM_COMMAND(
+-  OUTPUT ${CMake_BINARY_DIR}/Docs/cmake.txt
++  OUTPUT ${CMake_BINARY_DIR}/Docs/cmake28.txt
+   COMMAND ${CMD} 
+   ARGS --copyright ${CMake_BINARY_DIR}/Docs/Copyright.txt
+-       --help-full ${CMake_BINARY_DIR}/Docs/cmake.txt
+-       --help-full ${CMake_BINARY_DIR}/Docs/cmake.html
+-       --help-full ${CMake_BINARY_DIR}/Docs/cmake.1
+-       --help-full ${CMake_BINARY_DIR}/Docs/cmake.docbook
+-       --help-policies ${CMake_BINARY_DIR}/Docs/cmake-policies.txt
+-       --help-policies ${CMake_BINARY_DIR}/Docs/cmake-policies.html
+-       --help-policies ${CMake_BINARY_DIR}/Docs/cmakepolicies.1
+-       --help-properties ${CMake_BINARY_DIR}/Docs/cmake-properties.txt
+-       --help-properties ${CMake_BINARY_DIR}/Docs/cmake-properties.html
+-       --help-properties ${CMake_BINARY_DIR}/Docs/cmakeprops.1
+-       --help-variables ${CMake_BINARY_DIR}/Docs/cmake-variables.txt
+-       --help-variables ${CMake_BINARY_DIR}/Docs/cmake-variables.html
+-       --help-variables ${CMake_BINARY_DIR}/Docs/cmakevars.1
+-       --help-modules ${CMake_BINARY_DIR}/Docs/cmake-modules.txt
+-       --help-modules ${CMake_BINARY_DIR}/Docs/cmake-modules.html
+-       --help-modules ${CMake_BINARY_DIR}/Docs/cmakemodules.1
+-       --help-commands ${CMake_BINARY_DIR}/Docs/cmake-commands.txt
+-       --help-commands ${CMake_BINARY_DIR}/Docs/cmake-commands.html
+-       --help-commands ${CMake_BINARY_DIR}/Docs/cmakecommands.1
+-       --help-compatcommands ${CMake_BINARY_DIR}/Docs/cmake-compatcommands.txt
+-       --help-compatcommands ${CMake_BINARY_DIR}/Docs/cmake-compatcommands.html
+-       --help-compatcommands ${CMake_BINARY_DIR}/Docs/cmakecompat.1
+-  DEPENDS cmake
++       --help-full ${CMake_BINARY_DIR}/Docs/cmake28.txt
++       --help-full ${CMake_BINARY_DIR}/Docs/cmake28.html
++       --help-full ${CMake_BINARY_DIR}/Docs/cmake28.1
++       --help-full ${CMake_BINARY_DIR}/Docs/cmake28.docbook
++       --help-policies ${CMake_BINARY_DIR}/Docs/cmake28-policies.txt
++       --help-policies ${CMake_BINARY_DIR}/Docs/cmake28-policies.html
++       --help-policies ${CMake_BINARY_DIR}/Docs/cmake28policies.1
++       --help-properties ${CMake_BINARY_DIR}/Docs/cmake28-properties.txt
++       --help-properties ${CMake_BINARY_DIR}/Docs/cmake28-properties.html
++       --help-properties ${CMake_BINARY_DIR}/Docs/cmake28props.1
++       --help-variables ${CMake_BINARY_DIR}/Docs/cmake28-variables.txt
++       --help-variables ${CMake_BINARY_DIR}/Docs/cmake28-variables.html
++       --help-variables ${CMake_BINARY_DIR}/Docs/cmake28vars.1
++       --help-modules ${CMake_BINARY_DIR}/Docs/cmake28-modules.txt
++       --help-modules ${CMake_BINARY_DIR}/Docs/cmake28-modules.html
++       --help-modules ${CMake_BINARY_DIR}/Docs/cmake28modules.1
++       --help-commands ${CMake_BINARY_DIR}/Docs/cmake28-commands.txt
++       --help-commands ${CMake_BINARY_DIR}/Docs/cmake28-commands.html
++       --help-commands ${CMake_BINARY_DIR}/Docs/cmake28commands.1
++       --help-compatcommands ${CMake_BINARY_DIR}/Docs/cmake28-compatcommands.txt
++       --help-compatcommands ${CMake_BINARY_DIR}/Docs/cmake28-compatcommands.html
++       --help-compatcommands ${CMake_BINARY_DIR}/Docs/cmake28compat.1
++  DEPENDS cmake28
+   MAIN_DEPENDENCY ${CMake_SOURCE_DIR}/Utilities/Doxygen/authors.txt
+   )
+ 
+ INSTALL_FILES(${CMAKE_MAN_DIR}/man1 FILES ${MAN_FILES})
+ INSTALL_FILES(${CMAKE_DOC_DIR} FILES ${HTML_FILES} ${TEXT_FILES})
+-INSTALL(FILES cmake.m4 DESTINATION share/aclocal)
++INSTALL(FILES cmake.m4 DESTINATION share/aclocal RENAME cmake28.m4)
+ 
+ # Drive documentation generation.
+-ADD_CUSTOM_TARGET(documentation ALL DEPENDS ${DOC_FILES} ${CMake_BINARY_DIR}/Docs/cmake.txt )
++ADD_CUSTOM_TARGET(documentation ALL DEPENDS ${DOC_FILES} ${CMake_BINARY_DIR}/Docs/cmake28.txt )
+ 
+ # Documentation testing.
+ if(BUILD_TESTING)
