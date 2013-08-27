@@ -18,13 +18,13 @@ Group:          Development/Tools
 License:        BSD and MIT and zlib
 URL:            http://www.cmake.org
 Source0:        http://www.cmake.org/files/v2.8/cmake-%{version}.tar.gz
-Source2:        macros.cmake28
 # Patch to find DCMTK in Fedora (bug #720140)
 Patch0:         cmake-dcmtk.patch
 # (modified) Upstream patch to fix setting PKG_CONFIG_FOUND (bug #812188)
 Patch1:         cmake-pkgconfig.patch
 # This patch renames the executables with a "28" suffix
 Patch2:         cmake28.patch
+Patch3:         cmake-macros.patch
 
 # Source/kwsys/MD5.c
 # see https://fedoraproject.org/wiki/Packaging:No_Bundled_Libraries
@@ -80,6 +80,7 @@ The %{name}-gui package contains the Qt based GUI for CMake.
 %patch0 -p1 -b .dcmtk
 %patch1 -p1 -b .pkgconfig
 %patch2 -p1 -b .cmake28
+%patch3 -p1
 
 
 %build
@@ -110,9 +111,9 @@ cp -a Example $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/emacs/site-lisp/cmake28
 install -m 0644 Docs/cmake-mode.el $RPM_BUILD_ROOT%{_datadir}/emacs/site-lisp/cmake28/cmake28-mode.el
 # RPM macros
-install -p -m0644 -D %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/rpm/macros.cmake28
+install -p -m0644 -D macros.cmake28 $RPM_BUILD_ROOT%{_sysconfdir}/rpm/macros.cmake28
 sed -i -e "s|@@CMAKE_VERSION@@|%{version}|" $RPM_BUILD_ROOT%{_sysconfdir}/rpm/macros.cmake28
-touch -r %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/rpm/macros.cmake28
+touch -r macros.cmake28 $RPM_BUILD_ROOT%{_sysconfdir}/rpm/macros.cmake28
 mkdir -p $RPM_BUILD_ROOT%{_libdir}/%{name}
 
 %if %{with gui}
