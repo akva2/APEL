@@ -3,8 +3,6 @@
 %bcond_with bootstrap
 # Set to bcond_with or use --without gui to disable qt4 gui build
 %bcond_without gui
-# Set to RC version if building RC, else %{nil}
-%define rcver %{nil}
 
 Name:           cmake28
 Version:        2.8.8
@@ -19,7 +17,7 @@ Group:          Development/Tools
 # granting redistribution under terms of your choice
 License:        BSD and MIT and zlib
 URL:            http://www.cmake.org
-Source0:        http://www.cmake.org/files/v2.8/cmake-%{version}%{?rcver}.tar.gz
+Source0:        http://www.cmake.org/files/v2.8/cmake-%{version}.tar.gz
 Source2:        macros.cmake28
 # Patch to find DCMTK in Fedora (bug #720140)
 Patch0:         cmake-dcmtk.patch
@@ -70,7 +68,7 @@ The %{name}-gui package contains the Qt based GUI for CMake.
 
 
 %prep
-%setup -q -n cmake-%{version}%{?rcver}
+%setup -q -n cmake-%{version}
 %patch0 -p1 -b .dcmtk
 %patch1 -p1 -b .pkgconfig
 %patch2 -p1 -b .cmake28
