@@ -164,7 +164,9 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %{_datadir}/aclocal/cmake28.m4
 %{_datadir}/%{name}/
 %{_mandir}/man1/*
+%if %{with gui}
 %exclude %{_mandir}/man1/cmake28-gui.1.gz
+%endif
 %{_datadir}/emacs/site-lisp/cmake28
 %{_libdir}/%{name}/
 
