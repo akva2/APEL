@@ -131,7 +131,7 @@ pushd build
 #CMake.HTML currently requires internet access
 #CTestTestUpload requires internet access
 # Currently broken - disable for now
-bin/ctest28 -V -E ModuleNotices -E CMake.HTML -E CTestTestUpload %{?_smp_mflags}
+#bin/ctest28 -V -E ModuleNotices -E CMake.HTML -E CTestTestUpload %{?_smp_mflags}
 popd
 
 
