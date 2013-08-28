@@ -52,7 +52,7 @@ Requires:       libpsurface0 = %{version}
 This package contains the development and header files for %{name}.
 
 %prep
-%setup -q
+%setup -q -n lib%{name}-%{version}
 %patch0 -p1
 
 %build
