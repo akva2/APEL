@@ -15,6 +15,14 @@
 # Please submit bugfixes or comments via http://bugs.opensuse.org/
 #
 
+%bcond_with debug
+
+# don't include METIS dependency on RHEL 5
+%if 0%{?rhel} > 5
+%bcond_without metis
+%else
+%bcond_with metis
+%endif
 
 Name:           ALUGrid
 Version:        1.52
@@ -24,8 +32,9 @@ License:        GPL-2.0
 Group:          Development/Libraries/C and C++
 Url:            http://aam.mathematik.uni-freiburg.de/IAM/Research/alugrid/
 Source0:        http://aam.mathematik.uni-freiburg.de/IAM/Research/alugrid/%{name}-%{version}.tar.gz
-BuildRequires:  gcc-c++
-BuildRequires:  metis-devel
+%{?el5:BuildRequires: gcc44-c++}
+%{!?el5:BuildRequires: gcc-c++}
+%{?with metis:BuildRequires: metis-devel}
 BuildRequires:  pkgconfig
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Requires:	libalugrid0 = %{version}
@@ -57,7 +66,7 @@ This package contains the development and header files for %{name}.
 %setup -q
 
 %build
-%configure --enable-shared --disable-static --with-metis=%{_prefix}
+%configure --enable-shared --disable-static %{?with metis:--with-metis=%{_prefix}} %{?el5:CC=gcc44 CXX=g++44} %{!?_with_debug:CFLAGS=-DNDEBUG CXXFLAGS=-DNDEBUG}
 make %{?_smp_mflags}
 
 %install
