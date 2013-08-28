@@ -25,7 +25,9 @@ Group:          Development/Libraries/C and C++
 Url:            http://numerik.mi.fu-berlin.de/dune/psurface/index.php
 Source0:        http://numerik.mi.fu-berlin.de/dune/psurface/lib%{name}-%{version}.tar.gz
 Patch0:		00-libpsurface-old-automake.patch
-BuildRequires:  gcc-c++ automake libtool doxygen
+%{?el5:BuildRequires: gcc44-c++}
+%{!?el5:BuildRequires: gcc-c++}
+BuildRequires:  automake libtool doxygen
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Requires:	libpsurface0 = %{version}
 
@@ -57,7 +59,7 @@ This package contains the development and header files for %{name}.
 
 %build
 autoreconf -if
-%configure --enable-shared --disable-static
+%configure --enable-shared --disable-static %{?el5:CC=gcc44 CXX=g++44}
 make %{?_smp_mflags}
 cd doc
 doxygen
