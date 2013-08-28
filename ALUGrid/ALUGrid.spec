@@ -24,7 +24,8 @@ License:        GPL-2.0
 Group:          Development/Libraries/C and C++
 Url:            http://aam.mathematik.uni-freiburg.de/IAM/Research/alugrid/
 Source0:        http://aam.mathematik.uni-freiburg.de/IAM/Research/alugrid/%{name}-%{version}.tar.gz
-BuildRequires:  gcc-c++
+%{?el5:BuildRequires: gcc44-c++}
+%{!?el5:BuildRequires: gcc-c++}
 BuildRequires:  metis-devel
 BuildRequires:  pkgconfig
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
@@ -57,7 +58,7 @@ This package contains the development and header files for %{name}.
 %setup -q
 
 %build
-%configure --enable-shared --disable-static --with-metis=%{_prefix}
+%configure --enable-shared --disable-static --with-metis=%{_prefix} %{?el5:CC=gcc44 CXX=g++44}
 make %{?_smp_mflags}
 
 %install
