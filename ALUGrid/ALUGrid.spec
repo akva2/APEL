@@ -15,6 +15,8 @@
 # Please submit bugfixes or comments via http://bugs.opensuse.org/
 #
 
+%bcond_with debug
+
 # don't include METIS dependency on RHEL 5
 %if 0%{?rhel} > 5
 %bcond_without metis
@@ -64,7 +66,7 @@ This package contains the development and header files for %{name}.
 %setup -q
 
 %build
-%configure --enable-shared --disable-static %{?with metis:--with-metis=%{_prefix}} %{?el5:CC=gcc44 CXX=g++44}
+%configure --enable-shared --disable-static %{?with metis:--with-metis=%{_prefix}} %{?el5:CC=gcc44 CXX=g++44} %{!?_with_debug:CFLAGS=-DNDEBUG CXXFLAGS=-DNDEBUG}
 make %{?_smp_mflags}
 
 %install
