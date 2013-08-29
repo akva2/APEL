@@ -11,6 +11,8 @@ License:        GPL-3.0
 Group:          Development/Libraries/C and C++
 Url:            http://alberta-fem.de
 Source0:        http://www.alberta-fem.de/Downloads/%{name}-%{version}.tar.gz
+%{?el5:BuildRequires: gcc44-c++ gcc44-gfortran}
+%{!?el5:BuildRequires: gcc-c++ gcc-gfortran}
 BuildRequires:  lapack-devel libX11-devel mesa-libGL-devel libtool pkgconfig
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Requires:	libalberta2 = %{version}
@@ -33,11 +35,18 @@ Requires:       libalberta2 = %{version}
 %description devel
 This package contains the development and header files for %{name}.
 
+%package debuginfo
+Summary:        Debug information for %{name}
+Group:          Development/Debug
+
+%description debuginfo
+This package contains the debug information for %{name}.
+
 %prep
 %setup -q
 
 %build
-%configure --disable-shared
+%configure --disable-shared %{?el5:CC=gcc44 CXX=g++44 F77=gfortran44}
 make %{?_smp_mflags}
 
 %install
