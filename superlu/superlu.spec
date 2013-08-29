@@ -19,7 +19,9 @@
 
 
 Name:           superlu
-BuildRequires:  gcc-gfortran tcsh blas-devel
+%{?el5:BuildRequires: gcc44 gcc44-gfortran}
+%{!?el5:BuildRequires: gcc gcc-gfortran}
+BuildRequires:  tcsh blas-devel
 License:        BSD 3-Clause
 Group:          Development/Libraries/C and C++
 Summary:        SuperLU matrix solver
@@ -78,7 +80,7 @@ sed -i "s|\$(SUPERLULIB) ||" make.inc
 sed -i "s|\$(HOME)/Codes/%{name}_%{version}|%{_builddir}/%{name}_%{version}|" make.inc
 
 %build
-make superlulib
+make superlulib %{?el5:CC=gcc44 F77=gfortran77}
 
 %install
 install -d ${RPM_BUILD_ROOT}/%{_docdir}/superlu
