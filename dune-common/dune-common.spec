@@ -62,7 +62,7 @@ This package contains the development and header files for DUNE.
 %setup -q
 
 %build
-%configure --enable-shared --disable-static %{?el5:CC=gcc44 CXX=g++44 FC=gfortran44}
+%configure --enable-shared --disable-static --enable-fieldvector-size-is-method %{?el5:CC=gcc44 CXX=g++44 FC=gfortran44}
 sed -i 's,eval cmake ,eval cmake28 ,' bin/dunecontrol
 make %{?_smp_mflags}
 

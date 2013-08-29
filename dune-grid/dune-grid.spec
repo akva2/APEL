@@ -73,6 +73,7 @@ This package contains the development and header files for %{name}.
 	   --disable-static \
            --without-ug \
            --without-amiramesh \
+           --enable-fieldvector-size-is-method \
            %{?el5:CC=gcc44 CXX=g++44 FC=gfortran44}
 make %{?_smp_mflags}
 
