@@ -11,8 +11,8 @@ Group:          Development/Libraries/C and C++
 Url:            http://www.dune-project.org/
 Source0:        http://www.dune-project.org/download/%{version}/%{name}-%{version}.tar.gz
 BuildRequires:  dune-common-devel
-BuildRequires:  gcc-c++
-BuildRequires:  gcc-gfortran
+%{?el5:BuildRequires: gcc44-c++ gcc44-gfortran}
+%{!?el5:BuildRequires: gcc-c++ gcc-gfortran}
 BuildRequires:  gmp-devel
 BuildRequires:  pkgconfig
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
@@ -47,7 +47,7 @@ This package contains the development and header files for DUNE.
 %setup -q
 
 %build
-%configure --enable-shared --disable-static
+%configure --enable-shared --disable-static --enable-fieldvector-size-is-method --disable-documentation %{?el5:CC=gcc44 CXX=g++44 FC=gfortran44}
 make %{?_smp_mflags}
 
 %install
