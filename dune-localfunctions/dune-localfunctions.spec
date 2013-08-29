@@ -49,6 +49,7 @@ Requires:       %{name} = %{version}
 Requires:       dune-common-devel = %{version}
 Requires:       dune-geometry-devel = %{version}
 Requires:       dune-grid-devel = %{version}
+BuildArch:      noarch
 
 %description devel
 This package contains the development and header files for %{name}.

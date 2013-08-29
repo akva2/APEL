@@ -60,7 +60,6 @@ further grid managers can be added through separate modules.
 Summary:        Development and header files for %{name}
 Group:          Development/Libraries/C and C++
 Requires:       libdune-grid0 = %{version}
-BuildArch:	noarch
 
 %description devel
 This package contains the development and header files for %{name}.
