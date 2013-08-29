@@ -63,6 +63,7 @@ This package contains the development and header files for DUNE.
 
 %build
 %configure --enable-shared --disable-static %{?el5:CC=gcc44 CXX=g++44 FC=gfortran44}
+sed -i 's,eval cmake ,eval cmake28 ,' bin/dunecontrol
 make %{?_smp_mflags}
 
 %install
