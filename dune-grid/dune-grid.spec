@@ -28,8 +28,8 @@ BuildRequires:  ALUGrid-devel
 BuildRequires:  alberta-devel
 BuildRequires:  dune-common-devel
 BuildRequires:  dune-geometry-devel
-BuildRequires:  gcc-c++
-BuildRequires:  gcc-gfortran
+%{?el5:BuildRequires: gcc44-c++ gcc44-gfortran}
+%{!?el5:BuildRequires: gcc-c++ gcc-gfortran}
 BuildRequires:  mesa-libGL-devel
 BuildRequires:  pkgconfig
 BuildRequires:  psurface-devel
@@ -72,7 +72,8 @@ This package contains the development and header files for %{name}.
 %configure --enable-shared \
 	   --disable-static \
            --without-ug \
-           --without-amiramesh
+           --without-amiramesh \
+           %{?el5:CC=gcc44 CXX=g++44 FC=gfortran44}
 make %{?_smp_mflags}
 
 %install

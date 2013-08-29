@@ -29,8 +29,8 @@ BuildRequires:  alberta-devel
 BuildRequires:  dune-common-devel
 BuildRequires:  dune-geometry-devel
 BuildRequires:  dune-grid-devel
-BuildRequires:  gcc-c++
-BuildRequires:  gcc-gfortran
+%{?el5:BuildRequires: gcc44-c++ gcc44-gfortran}
+%{!?el5:BuildRequires: gcc-c++ gcc-gfortran}
 BuildRequires:  pkgconfig
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Requires:       dune-common = %{version}
@@ -59,7 +59,8 @@ This package contains the development and header files for %{name}.
 %build
 %configure --enable-shared \
            --without-ug \
-           --without-amiramesh
+           --without-amiramesh \
+           %{?el5:CC=gcc44 CXX=g++44 FC=gfortran44}
 make %{?_smp_mflags}
 
 %install
