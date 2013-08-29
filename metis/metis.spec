@@ -10,7 +10,9 @@ Patch0: 00-metis-out-of-tree-build.patch
 Patch1: 01-metis-set-soversion.patch
 Patch2: 02-metis-honor-lib64.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: make gcc gcc-c++ pkgconfig cmake28
+%{?el5:BuildRequires: gcc44 gcc44-c++}
+%{!?el5:BuildRequires: gcc gcc-c++}
+BuildRequires: make pkgconfig cmake28
 Requires:      libmetis0 = %{version}
 
 %description
@@ -48,7 +50,7 @@ shown to produce high quality results and scale to very large problems.
 %patch1 -p1
 %patch2 -p1
 %build
-CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" cmake28 . -DCMAKE_INSTALL_PREFIX=%{_prefix} -DSHARED=1
+CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" cmake28 . -DCMAKE_INSTALL_PREFIX=%{_prefix} -DSHARED=1 %{?el5:-DCMAKE_C_COMPILER=gcc44 -DCMAKE_CXX_COMPILER=g++44}
 %__make %{?jobs:-j%{jobs}}
 
 %install

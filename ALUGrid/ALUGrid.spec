@@ -17,13 +17,6 @@
 
 %bcond_with debug
 
-# don't include METIS dependency on RHEL 5
-%if 0%{?rhel} > 5
-%bcond_without metis
-%else
-%bcond_with metis
-%endif
-
 Name:           ALUGrid
 Version:        1.52
 Release:        0
@@ -34,7 +27,7 @@ Url:            http://aam.mathematik.uni-freiburg.de/IAM/Research/alugrid/
 Source0:        http://aam.mathematik.uni-freiburg.de/IAM/Research/alugrid/%{name}-%{version}.tar.gz
 %{?el5:BuildRequires: gcc44-c++}
 %{!?el5:BuildRequires: gcc-c++}
-%{?with metis:BuildRequires: metis-devel}
+BuildRequires:  metis-devel
 BuildRequires:  pkgconfig
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Requires:	libalugrid0 = %{version}
@@ -66,7 +59,7 @@ This package contains the development and header files for %{name}.
 %setup -q
 
 %build
-%configure --enable-shared --disable-static %{?with metis:--with-metis=%{_prefix}} %{?el5:CC=gcc44 CXX=g++44} %{!?_with_debug:CFLAGS=-DNDEBUG CXXFLAGS=-DNDEBUG}
+%configure --enable-shared --disable-static --with-metis=%{_prefix} %{?el5:CC=gcc44 CXX=g++44} %{!?_with_debug:CFLAGS=-DNDEBUG CXXFLAGS=-DNDEBUG}
 make %{?_smp_mflags}
 
 %install
