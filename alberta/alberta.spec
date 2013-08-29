@@ -33,6 +33,13 @@ Requires:       libalberta2 = %{version}
 %description devel
 This package contains the development and header files for %{name}.
 
+%package debuginfo
+Summary:        Debug information for %{name}
+Group:          Development/Debug
+
+%description debuginfo
+This package contains the debug information for %{name}.
+
 %prep
 %setup -q
 
