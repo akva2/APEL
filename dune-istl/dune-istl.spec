@@ -61,7 +61,7 @@ This package contains the development and header files for DUNE.
 %setup -q
 
 %build
-%configure --enable-shared --enable-fieldvector-size-is-method %{?el5:CC=gcc44 CXX=g++44 FC=gfortran44}
+%configure --enable-shared --enable-fieldvector-size-is-method --disable-documentation %{?el5:CC=gcc44 CXX=g++44 FC=gfortran44}
 make %{?_smp_mflags}
 
 %install
