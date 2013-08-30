@@ -54,6 +54,7 @@ Requires:       dune-common-devel = %{version}
 Requires:       gmp-devel
 Requires:       metis-devel
 Requires:       superlu-devel
+BuildArch:      noarch
 
 %description devel
 This package contains the development and header files for DUNE.
