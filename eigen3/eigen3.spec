@@ -13,7 +13,7 @@ Patch0:         eigen3_unused-typedefs.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-BuildRequires:  cmake
+BuildRequires:  cmake28
 
 %description
 %{summary}
