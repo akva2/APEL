@@ -6,9 +6,8 @@ Summary:        A lightweight C++ template library for vector and matrix math
 Group:          Development/Libraries
 License:        MPLv2.0 and LGPLv2+ and BSD
 URL:            http://eigen.tuxfamily.org/index.php?title=Main_Page
-# Source file is at: http://bitbucket.org/eigen/eigen/get/3.1.3.tar.bz2
 # Renamed source file so it's not just a version number
-Source0:        eigen-%{version}.tar.bz2
+Source0:        http://bitbucket.org/eigen/eigen/get/%{version}.tar.bz2#/%{name}-%{version}.tar.bz2
 Patch0:         eigen3_unused-typedefs.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
