@@ -13,6 +13,8 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
 BuildRequires:  cmake28
+%{?el5:BuildRequires:  gcc44-c++}
+%{!?el5:BuildRequires: gcc-c++}
 
 %description
 %{summary}
@@ -34,7 +36,7 @@ Provides: %{name}-static = %{version}-%{release}
 %build
 mkdir %{_target_platform}
 pushd %{_target_platform}
-%cmake ..
+CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" cmake28 .. -DCMAKE_INSTALL_PREFIX=%{_prefix} %{?el5:-DCMAKE_C_COMPILER=gcc44 -DCMAKE_CXX_COMPILER=g++44}
 popd
 make -C %{_target_platform} %{?_smp_mflags}
 
