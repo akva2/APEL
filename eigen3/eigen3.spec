@@ -23,9 +23,6 @@ BuildRequires:  sparsehash-devel
 BuildRequires:  suitesparse-devel
 
 BuildRequires:  cmake
-BuildRequires:  doxygen
-BuildRequires:  graphviz
-BuildRequires:  tex(latex)
 
 %description
 %{summary}
@@ -50,10 +47,6 @@ pushd %{_target_platform}
 %cmake .. -DBLAS_LIBRARIES="cblas" -DBLAS_LIBRARIES_DIR=%{_libdir}/atlas
 popd
 make -C %{_target_platform} %{?_smp_mflags}
-make doc -C %{_target_platform} %{?_smp_mflags}
-
-rm -f %{_target_platform}/doc/html/installdox
-rm -f %{_target_platform}/doc/html/unsupported/installdox
 
 %install
 rm -rf %{buildroot}
@@ -65,7 +58,6 @@ rm -rf %{buildroot}
 %files devel
 %defattr(-,root,root,-)
 %doc COPYING.README COPYING.BSD COPYING.MPL2 COPYING.LGPL
-%doc %{_target_platform}/doc/html
 %{_includedir}/eigen3
 %{_datadir}/pkgconfig/*
 
