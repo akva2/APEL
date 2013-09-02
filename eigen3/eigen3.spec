@@ -13,15 +13,6 @@ Patch0:         eigen3_unused-typedefs.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-BuildRequires:  atlas-devel
-BuildRequires:  fftw-devel
-BuildRequires:  glew-devel
-BuildRequires:  gmp-devel
-BuildRequires:  gsl-devel
-BuildRequires:  mpfr-devel
-BuildRequires:  sparsehash-devel
-BuildRequires:  suitesparse-devel
-
 BuildRequires:  cmake
 
 %description
@@ -44,7 +35,7 @@ Provides: %{name}-static = %{version}-%{release}
 %build
 mkdir %{_target_platform}
 pushd %{_target_platform}
-%cmake .. -DBLAS_LIBRARIES="cblas" -DBLAS_LIBRARIES_DIR=%{_libdir}/atlas
+%cmake ..
 popd
 make -C %{_target_platform} %{?_smp_mflags}
 
