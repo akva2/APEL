@@ -15,7 +15,7 @@ BuildArch:      noarch
 BuildRequires:  cmake28
 %{?el5:BuildRequires:  gcc44-c++}
 %{!?el5:BuildRequires: gcc-c++}
-Requires:       atlas-devel fftw-devel glew-devel gmp-devel gsl-devel suitesparse-devel
+Requires:       blas-devel lapack-devel fftw-devel glew-devel gmp-devel gsl-devel suitesparse-devel
 %{!?el5:Requires: mpfr-devel sparsehash-devel}
 
 %description
