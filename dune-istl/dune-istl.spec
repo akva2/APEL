@@ -17,26 +17,26 @@
 
 
 Name:           dune-istl
-Version:        2.2.1
+Version:        2.3.1
 Release:        0
 Summary:        An iterative solver template library for DUNE
 License:        GPL-2.0
 Group:          Development/Libraries/C and C++
 Url:            http://www.dune-project.org/
 Source0:        http://www.dune-project.org/download/%{version}/%{name}-%{version}.tar.gz
-%{?el5:BuildRequires:  boost141-devel}
-%{!?el5:BuildRequires: boost-devel}
-BuildRequires:  dune-common-devel
+BuildRequires:  dune-common-devel boost148-devel
 %{?el5:BuildRequires: gcc44-c++ gcc44-gfortran}
 %{!?el5:BuildRequires: gcc-c++ gcc-gfortran}
 BuildRequires:  gmp-devel
 BuildRequires:  metis-devel
 BuildRequires:  superlu-devel
 BuildRequires:  pkgconfig
+BuildRequires:  cmake28
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Requires:       dune-common = %{version}
 # Since it is a pure template library..
 Requires:	dune-istl-devel = %{version}
+# Workaround broken boost cmake macros
 
 %description
 dune-istl is the iterative solver template library which provides generic
@@ -63,15 +63,18 @@ This package contains the development and header files for DUNE.
 %setup -q
 
 %build
-%configure --enable-shared --enable-fieldvector-size-is-method --disable-documentation %{?el5:--with-boost=/usr/include/boost141 --with-boost-libdir=%{_libdir}/boost141} %{?el5:CC=gcc44 CXX=g++44 FC=gfortran44}
-make %{?_smp_mflags}
+mkdir %{_target_platform}
+pushd %{_target_platform}
+CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" cmake28 .. -DCMAKE_INSTALL_PREFIX=%{_prefix} %{?el5:-DCMAKE_C_COMPILER=gcc44 -DCMAKE_CXX_COMPILER=g++44 -DCMAKE_Fortran_COMPILER=gfortran44} -DBOOST_LIBRARYDIR=%{_libdir}/boost148 -DBOOST_INCLUDEDIR=/usr/include/boost148 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=1
+popd
+make -C %{_target_platform} %{?_smp_mflags}
 
 %install
-%makeinstall
+rm -rf %{buildroot}
+make install DESTDIR=%{buildroot} -C %{_target_platform}
 
 %clean
 rm -rf %{buildroot}
-
 
 %files
 %defattr(-,root,root,-)
@@ -82,8 +85,11 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{_includedir}/*
 %{_datadir}/aclocal/*
-%{_libdir}/pkgconfig/*.pc
-%{_libdir}/dunecontrol/%{name}
+%{_datadir}/%{name}
+%{_datadir}/dune
+%{_prefix}/lib/cmake/*
+%{_prefix}/lib/pkgconfig/*.pc
+%{_prefix}/lib/dunecontrol/%{name}
 
 %changelog
 

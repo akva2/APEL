@@ -3,18 +3,19 @@
 #
 
 Name:           dune-geometry
-Version:        2.2.1
+Version:        2.3.1
 Release:        0
 Summary:        Everything related to the DUNE reference elements
 License:        GPL-2.0
 Group:          Development/Libraries/C and C++
 Url:            http://www.dune-project.org/
 Source0:        http://www.dune-project.org/download/%{version}/%{name}-%{version}.tar.gz
-BuildRequires:  dune-common-devel
+BuildRequires:  dune-common-devel boost148-devel
 %{?el5:BuildRequires: gcc44-c++ gcc44-gfortran}
 %{!?el5:BuildRequires: gcc-c++ gcc-gfortran}
 BuildRequires:  gmp-devel
 BuildRequires:  pkgconfig
+BuildRequires:  cmake28
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Requires:       dune-common = %{version}
 Requires:       libdune-geometry0 = %{version}
@@ -47,13 +48,15 @@ This package contains the development and header files for DUNE.
 %setup -q
 
 %build
-%configure --enable-shared --disable-static --enable-fieldvector-size-is-method --disable-documentation %{?el5:CC=gcc44 CXX=g++44 FC=gfortran44}
-make %{?_smp_mflags}
+mkdir %{_target_platform}
+pushd %{_target_platform}
+CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" cmake28 .. -DCMAKE_INSTALL_PREFIX=%{_prefix} -DBOOST_LIBRARYDIR=%{_libdir}/boost148 -DBOOST_INCLUDEDIR=/usr/include/boost148 %{?el5:-DCMAKE_C_COMPILER=gcc44 -DCMAKE_CXX_COMPILER=g++44 -DCMAKE_Fortran_COMPILER=gfortran44} -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=1
+popd
+make -C %{_target_platform} %{?_smp_mflags}
 
 %install
-%makeinstall
-
-find %{buildroot} -name '*.la' -exec rm {} \;
+rm -rf %{buildroot}
+make install DESTDIR=%{buildroot} -C %{_target_platform}
 
 %clean
 rm -rf %{buildroot}
@@ -69,12 +72,13 @@ rm -rf %{buildroot}
 
 %files -n libdune-geometry0
 %defattr(-,root,root,-)
-%{_libdir}/*.so.*
+%{_libdir}/*.so
 
 %files devel
 %defattr(-,root,root,-)
 %{_includedir}/*
 %{_datadir}/aclocal/*
-%{_libdir}/*.so
+%{_datadir}/%{name}
+%{_libdir}/cmake/*
 %{_libdir}/pkgconfig/*.pc
-%{_libdir}/dunecontrol/%{name}
+%{_prefix}/lib/dunecontrol/%{name}

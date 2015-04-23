@@ -16,18 +16,20 @@
 #
 
 Name:           dune-common
-Version:        2.2.1
+Version:        2.3.1
 Release:        0
 Summary:        Distributed and Unified Numerics Environment
 License:        GPL-2.0
 Group:          Development/Libraries/C and C++
 Url:            http://www.dune-project.org/
 Source0:        http://www.dune-project.org/download/%{version}/%{name}-%{version}.tar.gz
-BuildRequires:  blas-devel
+BuildRequires:  blas-devel boost148-devel
 %{?el5:BuildRequires: gcc44-c++ gcc44-gfortran}
 %{!?el5:BuildRequires: gcc-c++ gcc-gfortran}
 BuildRequires:  lapack-devel
 BuildRequires:  pkgconfig
+BuildRequires:  cmake28
+BuildRequires:  doxygen
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Requires:       libdune-common0 = %{version}
 
@@ -62,14 +64,15 @@ This package contains the development and header files for DUNE.
 %setup -q
 
 %build
-%configure --enable-shared --disable-static --enable-fieldvector-size-is-method --disable-documentation %{?el5:CC=gcc44 CXX=g++44 FC=gfortran44}
-sed -i 's,eval cmake ,eval cmake28 ,' bin/dunecontrol
-make %{?_smp_mflags}
+mkdir %{_target_platform}
+pushd %{_target_platform}
+CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" cmake28 .. -DCMAKE_INSTALL_PREFIX=%{_prefix} -DBOOST_LIBRARYDIR=%{_libdir}/boost148 -DBOOST_INCLUDEDIR=/usr/include/boost148 %{?el5:-DCMAKE_C_COMPILER=gcc44 -DCMAKE_CXX_COMPILER=g++44 -DCMAKE_Fortran_COMPILER=gfortran44} -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=1
+popd
+make -C %{_target_platform} %{?_smp_mflags}
 
 %install
-%makeinstall
-
-find %{buildroot} -name '*.la' -exec rm {} \;
+rm -rf %{buildroot}
+make install DESTDIR=%{buildroot} -C %{_target_platform}
 
 %clean
 rm -rf %{buildroot}
@@ -82,21 +85,22 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc COPYING README TODO
 %{_bindir}/*
-%{_datadir}/dune-common
 %{_datadir}/doc/dune-common
-%{_libdir}/dunecontrol
-%{_libdir}/dunemodules.lib
+%{_datadir}/dune-common
+%{_datadir}/man
+%{_datadir}/share
 
 %files -n libdune-common0
 %defattr(-,root,root,-)
-%{_libdir}/*.so.*
+%{_libdir}/*.so
 
 %files devel
 %defattr(-,root,root,-)
 %{_includedir}/*
-%{_datadir}/aclocal/*
-%{_libdir}/*.so
+%{_prefix}/lib/dune*
 %{_libdir}/pkgconfig/*.pc
+%{_libdir}/cmake
+%{_datadir}/dune
 
 %changelog
 

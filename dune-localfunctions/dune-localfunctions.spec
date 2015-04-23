@@ -17,24 +17,23 @@
 
 
 Name:           dune-localfunctions
-Version:        2.2.1
+Version:        2.3.1
 Release:        0
 Summary:        An interface and implementation for shape functions defined on the DUNE
 License:        GPL-2.0
 Group:          Development/Libraries/C and C++
 Url:            http://www.dune-project.org/
 Source0:        http://www.dune-project.org/download/%{version}/%{name}-%{version}.tar.gz
-BuildRequires:  ALUGrid-devel
-BuildRequires:  alberta-devel
 BuildRequires:  dune-common-devel
 BuildRequires:  dune-geometry-devel
-BuildRequires:  dune-grid-devel
+BuildRequires:  dune-grid-devel boost148-devel
 %{?el5:BuildRequires: gcc44-c++ gcc44-gfortran}
 %{!?el5:BuildRequires: gcc-c++ gcc-gfortran}
 BuildRequires:  pkgconfig
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Requires:       dune-common = %{version}
 Requires:       dune-geometry = %{version}
+Requires:       cmake28
 
 %description
 dune-localfunctions provides interface and implementation for shape functions
@@ -58,16 +57,15 @@ This package contains the development and header files for %{name}.
 %setup -q
 
 %build
-%configure --enable-shared \
-           --without-ug \
-           --without-amiramesh \
-           --disable-documentation \
-           --enable-fieldvector-size-is-method \
-           %{?el5:CC=gcc44 CXX=g++44 FC=gfortran44}
-make %{?_smp_mflags}
+mkdir %{_target_platform}
+pushd %{_target_platform}
+CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" cmake28 .. -DCMAKE_INSTALL_PREFIX=%{_prefix} %{?el5:-DCMAKE_C_COMPILER=gcc44 -DCMAKE_CXX_COMPILER=g++44 -DCMAKE_Fortran_COMPILER=gfortran44} -DBOOST_LIBRARYDIR=%{_libdir}/boost148 -DBOOST_INCLUDEDIR=/usr/include/boost148 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=1
+popd
+make -C %{_target_platform} %{?_smp_mflags}
 
 %install
-make install DESTDIR=${RPM_BUILD_ROOT}
+rm -rf %{buildroot}
+make install DESTDIR=%{buildroot} -C %{_target_platform}
 
 %clean
 rm -rf %{buildroot}
@@ -81,5 +79,8 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{_includedir}/dune/localfunctions
 %{_datadir}/aclocal/*
-%{_libdir}/pkgconfig/*.pc
-%{_libdir}/dunecontrol/%{name}
+%{_datadir}/dune
+%{_datadir}/dune-localfunctions
+%{_prefix}/lib/cmake
+%{_prefix}/lib/pkgconfig/*.pc
+%{_prefix}/lib/dunecontrol/%{name}
