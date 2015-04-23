@@ -33,9 +33,9 @@ Provides: bundled(md5-deutsch)
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %if 0%{?rhel} > 5
-BuildRequires: gcc-gfortran
+BuildRequires: gcc-gfortran gcc-c++
 %else
-BuildRequires: gcc44-gfortran
+BuildRequires: gcc44-gfortran gcc44-c++
 %endif
 BuildRequires:  ncurses-devel, libX11-devel
 BuildRequires:  bzip2-devel
