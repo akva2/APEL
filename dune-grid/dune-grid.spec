@@ -33,6 +33,8 @@ BuildRequires:  pkgconfig
 BuildRequires:  psurface-devel
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Requires:       libdune-grid0 = %{version}
+%{?el6:BuildRequires:  cmake28}
+%{?!el6:BuildRequires:  cmake}
 
 %description
 dune-grid defines nonconforming, hierarchically nested, multi-element-type,
@@ -68,7 +70,7 @@ This package contains the development and header files for %{name}.
 %build
 mkdir %{_target_platform}
 pushd %{_target_platform}
-CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" cmake28 .. -DCMAKE_INSTALL_PREFIX=%{_prefix} %{?el5:-DCMAKE_C_COMPILER=gcc44 -DCMAKE_CXX_COMPILER=g++44 -DCMAKE_Fortran_COMPILER=gfortran44} -DBOOST_LIBRARYDIR=%{_libdir}/boost148 -DBOOST_INCLUDEDIR=/usr/include/boost148 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=1
+CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" %{?el6:cmake28} %{?!el6:cmake} .. -DCMAKE_INSTALL_PREFIX=%{_prefix} %{?el5:-DCMAKE_C_COMPILER=gcc44 -DCMAKE_CXX_COMPILER=g++44 -DCMAKE_Fortran_COMPILER=gfortran44} -DBOOST_LIBRARYDIR=%{_libdir}/boost148 -DBOOST_INCLUDEDIR=/usr/include/boost148 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=1
 popd
 make -C %{_target_platform} %{?_smp_mflags}
 

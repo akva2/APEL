@@ -15,7 +15,8 @@ BuildRequires:  dune-common-devel boost148-devel
 %{!?el5:BuildRequires: gcc-c++ gcc-gfortran}
 BuildRequires:  gmp-devel
 BuildRequires:  pkgconfig
-BuildRequires:  cmake28
+%{?el6:BuildRequires:  cmake28}
+%{?!el6:BuildRequires: cmake}
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Requires:       dune-common = %{version}
 Requires:       libdune-geometry0 = %{version}
@@ -50,7 +51,7 @@ This package contains the development and header files for DUNE.
 %build
 mkdir %{_target_platform}
 pushd %{_target_platform}
-CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" cmake28 .. -DCMAKE_INSTALL_PREFIX=%{_prefix} -DBOOST_LIBRARYDIR=%{_libdir}/boost148 -DBOOST_INCLUDEDIR=/usr/include/boost148 %{?el5:-DCMAKE_C_COMPILER=gcc44 -DCMAKE_CXX_COMPILER=g++44 -DCMAKE_Fortran_COMPILER=gfortran44} -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=1
+CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" %{?el6:cmake28} %{?!el6:cmake} .. -DCMAKE_INSTALL_PREFIX=%{_prefix} -DBOOST_LIBRARYDIR=%{_libdir}/boost148 -DBOOST_INCLUDEDIR=/usr/include/boost148 %{?el5:-DCMAKE_C_COMPILER=gcc44 -DCMAKE_CXX_COMPILER=g++44 -DCMAKE_Fortran_COMPILER=gfortran44} -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=1
 popd
 make -C %{_target_platform} %{?_smp_mflags}
 
