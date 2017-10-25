@@ -17,7 +17,7 @@
 
 
 Name:           dune-localfunctions
-Version:        2.3.1
+Version:        2.5.1
 Release:        0
 Summary:        An interface and implementation for shape functions defined on the DUNE
 License:        GPL-2.0
@@ -26,15 +26,13 @@ Url:            http://www.dune-project.org/
 Source0:        http://www.dune-project.org/download/%{version}/%{name}-%{version}.tar.gz
 BuildRequires:  dune-common-devel
 BuildRequires:  dune-geometry-devel
-BuildRequires:  dune-grid-devel boost148-devel
-%{?el5:BuildRequires: gcc44-c++ gcc44-gfortran}
-%{!?el5:BuildRequires: gcc-c++ gcc-gfortran}
-BuildRequires:  pkgconfig
+BuildRequires:  dune-grid-devel
+BuildRequires:  pkgconfig devtoolset-6-toolchain
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Requires:       dune-common = %{version}
 Requires:       dune-geometry = %{version}
-%{?el6:Requires:       cmake28}
-%{?!el6:Requires:       cmake}
+%{?el6:BuildRequires:  cmake3 boost148-devel}
+%{?!el6:Requires:       cmake boost-devel}
 
 %description
 dune-localfunctions provides interface and implementation for shape functions
@@ -60,7 +58,8 @@ This package contains the development and header files for %{name}.
 %build
 mkdir %{_target_platform}
 pushd %{_target_platform}
-CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" %{?el6:cmake28} %{?!el6:cmake} .. -DCMAKE_INSTALL_PREFIX=%{_prefix} %{?el5:-DCMAKE_C_COMPILER=gcc44 -DCMAKE_CXX_COMPILER=g++44 -DCMAKE_Fortran_COMPILER=gfortran44} -DBOOST_LIBRARYDIR=%{_libdir}/boost148 -DBOOST_INCLUDEDIR=/usr/include/boost148 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=1
+scl enable devtoolset-6 bash
+CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" %{?el6:cmake3} %{?!el6:cmake} .. -DCMAKE_INSTALL_PREFIX=%{_prefix} -DCMAKE_CXX_COMPILER=/opt/rh/devtoolset-6/root/usr/bin/g++ -DCMAKE_C_COMPILER=/opt/rh/devtoolset-6/root/usr/bin/gcc -DCMAKE_Fortran_COMPILER=/opt/rh/devtoolset-6/root/usr/bin/gfortran %{?el6:-DBOOST_LIBRARYDIR=%{_libdir}/boost148 -DBOOST_INCLUDEDIR=%{_includedir}/boost148} -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=1
 popd
 make -C %{_target_platform} %{?_smp_mflags}
 
@@ -73,14 +72,12 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc COPYING README
+%doc COPYING README.md
 %{_datadir}/doc/dune-localfunctions
 
 %files devel
 %defattr(-,root,root,-)
 %{_includedir}/dune/localfunctions
-%{_datadir}/aclocal/*
-%{_datadir}/dune
 %{_datadir}/dune-localfunctions
 %{_prefix}/lib/cmake
 %{_prefix}/lib/pkgconfig/*.pc

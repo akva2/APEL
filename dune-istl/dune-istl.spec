@@ -17,23 +17,19 @@
 
 
 Name:           dune-istl
-Version:        2.3.1
+Version:        2.5.1
 Release:        0
 Summary:        An iterative solver template library for DUNE
 License:        GPL-2.0
 Group:          Development/Libraries/C and C++
 Url:            http://www.dune-project.org/
 Source0:        http://www.dune-project.org/download/%{version}/%{name}-%{version}.tar.gz
-BuildRequires:  dune-common-devel boost148-devel
-%{?el5:BuildRequires: gcc44-c++ gcc44-gfortran}
-%{!?el5:BuildRequires: gcc-c++ gcc-gfortran}
+BuildRequires:  dune-common-devel
 BuildRequires:  gmp-devel
-BuildRequires:  metis-devel
-%{?el6:BuildRequires:  superlu-devel}
-%{?!el6:BuildRequires:  SuperLU-devel}
-BuildRequires:  pkgconfig
-%{?el6:BuildRequires:  cmake28}
-%{?!el6:BuildRequires: cmake}
+BuildRequires:  metis-devel suitesparse-devel
+BuildRequires:  pkgconfig devtoolset-6-toolchain
+%{?el6:BuildRequires:  cmake3 boost148-devel}
+%{?!el6:BuildRequires: cmake boost-devel}
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Requires:       dune-common = %{version}
 # Since it is a pure template library..
@@ -54,9 +50,7 @@ Summary:        Development and header files for DUNE
 Group:          Development/Libraries/C and C++
 Requires:       dune-common-devel = %{version}
 Requires:       gmp-devel
-Requires:       metis-devel
-%{?el6:Requires:       superlu-devel}
-%{?!el6:Requires:       SuperLU-devel}
+Requires:       metis-devel suitesparse-devel
 BuildArch:      noarch
 
 %description devel
@@ -68,7 +62,8 @@ This package contains the development and header files for DUNE.
 %build
 mkdir %{_target_platform}
 pushd %{_target_platform}
-CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" %{?el6:cmake28} %{?!el6:cmake} .. -DCMAKE_INSTALL_PREFIX=%{_prefix} %{?el5:-DCMAKE_C_COMPILER=gcc44 -DCMAKE_CXX_COMPILER=g++44 -DCMAKE_Fortran_COMPILER=gfortran44} -DBOOST_LIBRARYDIR=%{_libdir}/boost148 -DBOOST_INCLUDEDIR=/usr/include/boost148 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=1
+scl enable devtoolset-6 bash
+CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" %{?el6:cmake3} %{?!el6:cmake} .. -DCMAKE_INSTALL_PREFIX=%{_prefix} -DCMAKE_CXX_COMPILER=/opt/rh/devtoolset-6/root/usr/bin/g++ -DCMAKE_C_COMPILER=/opt/rh/devtoolset-6/root/usr/bin/gcc -DCMAKE_Fortran_COMPILER=/opt/rh/devtoolset-6/root/usr/bin/gfortran %{?el6:-DBOOST_LIBRARYDIR=%{_libdir}/boost148 -DBOOST_INCLUDEDIR=%{_includedir}/boost148} -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=1
 popd
 make -C %{_target_platform} %{?_smp_mflags}
 
@@ -81,15 +76,15 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc COPYING README
+%doc COPYING README.md
 %{_datadir}/doc/dune-istl
 
 %files devel
 %defattr(-,root,root,-)
 %{_includedir}/*
-%{_datadir}/aclocal/*
 %{_datadir}/%{name}
 %{_datadir}/dune
+%{_prefix}/lib/*
 %{_prefix}/lib/cmake/*
 %{_prefix}/lib/pkgconfig/*.pc
 %{_prefix}/lib/dunecontrol/%{name}
